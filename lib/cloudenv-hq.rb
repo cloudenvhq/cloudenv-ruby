@@ -1,7 +1,7 @@
 require "pathname"
 require "dotenv"
 
-class CloudEnv
+class CloudenvHQ
   VERSION = "0.1.0".freeze
 
   API_HOST = "https://app.cloudenv.com".freeze
@@ -41,4 +41,4 @@ class CloudEnv
   end
 end
 
-CloudEnv.new(bearer: ENV["CLOUDENV_BEARER_PATH"])
+CloudenvHQ.new(bearer: ENV["CLOUDENV_BEARER_PATH"])

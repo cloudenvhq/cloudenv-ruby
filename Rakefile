@@ -4,9 +4,9 @@ require "rake"
 require "rake/testtask"
 require "rdoc/task"
 require "rubygems/package_task"
-require "./lib/cloud-env"
+require "./lib/cloudenv-hq"
 
-PKG_VERSION = Cloudenv::VERSION
+PKG_VERSION = CloudenvHQ::VERSION
 PKG_NAME = "cloud-env".freeze
 PKG_FILE_NAME = "#{PKG_NAME}-#{PKG_VERSION}".freeze
 RELEASE_NAME = "#{PKG_NAME}-#{PKG_VERSION}".freeze
@@ -29,7 +29,7 @@ end
 # Make a console, useful when working on tests
 desc "Generate a test console"
 task :console do
-  verbose(false) { sh "irb -I lib/ -r 'cloudenv'" }
+  verbose(false) { sh "irb -I lib/ -r 'cloudenv-hq'" }
 end
 
 # Genereate the RDoc documentation
@@ -45,7 +45,7 @@ end
 spec = Gem::Specification.new do |s|
   #### Basic information.
 
-  s.name = "cloudenv"
+  s.name = "cloudenv-hq"
   s.version = PKG_VERSION
   s.summary = <<-EOF
    Keep your ENV vars synced between your team members
