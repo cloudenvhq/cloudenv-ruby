@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "cloudenv-hq"
-  s.version = "0.1.0"
+  s.version = "0.1.1"
   s.license = "MIT"
   s.version = "#{s.version}-alpha-#{ENV['TRAVIS_BUILD_NUMBER']}" if ENV["TRAVIS"]
   s.date = "2020-10-10"
