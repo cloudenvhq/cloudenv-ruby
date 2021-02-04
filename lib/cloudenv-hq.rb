@@ -1,8 +1,9 @@
 require "pathname"
 require "dotenv"
+require "tempfile"
 
 class CloudenvHQ
-  VERSION = "0.1.1".freeze
+  VERSION = "0.1.2".freeze
 
   API_HOST = "https://app.cloudenv.com".freeze
   READ_PATH = "/api/v1/envs".freeze
