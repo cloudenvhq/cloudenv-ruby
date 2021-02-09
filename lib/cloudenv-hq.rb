@@ -3,14 +3,14 @@ require "dotenv"
 require "tempfile"
 
 class CloudenvHQ
-  VERSION = "0.1.2".freeze
+  VERSION = "0.1.3".freeze
 
   API_HOST = "https://app.cloudenv.com".freeze
   READ_PATH = "/api/v1/envs".freeze
 
   def initialize(options={})
     @environment = ENV["RAILS_ENV"] || ENV["RACK_ENV"]
-    @bearer = `cat #{options[:bearer] || "~/.cloudenvrc"}`.strip
+    @bearer = ENV["CLOUDENV_BEARER_TOKEN"] || `cat #{options[:bearer] || "~/.cloudenvrc"}`.strip
     @secret_key_filename = ".cloudenv-secret-key"
     @secret_key = Pathname.new(@secret_key_filename)
 
