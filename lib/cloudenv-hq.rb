@@ -1,9 +1,10 @@
 require "pathname"
 require "dotenv"
 require "tempfile"
+require "yaml"
 
 class CloudenvHQ
-  VERSION = "0.1.3".freeze
+  VERSION = "0.2.0".freeze
 
   API_HOST = "https://app.cloudenv.com".freeze
   READ_PATH = "/api/v1/envs".freeze
@@ -19,7 +20,10 @@ class CloudenvHQ
     end
 
     if File.exists?(@secret_key)
-      @app, @secret_key = IO.read(@secret_key).split
+      data = YAML.load(IO.read(@secret_key))
+
+      @app = data["slug"]
+      @secret_key = data["secret-key"]
 
       if @environment
         data = `curl -s -H "Authorization: Bearer #{@bearer}" "https://app.cloudenv.com/api/v1/envs?name=#{@app}&environment=#{@environment}&version=#{VERSION}&lang=ruby" | openssl enc -a -aes-256-cbc -md sha512 -d -pass pass:"#{@secret_key}" 2> /dev/null`
