@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'cloudenv-hq'
-  s.version = '0.2.7'
+  s.version = '0.2.8'
   s.license = 'MIT'
   s.date = '2020-10-10'
   s.summary = 'Keep your ENV vars synced between your team members'

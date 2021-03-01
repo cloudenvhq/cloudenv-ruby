@@ -4,7 +4,7 @@ require 'tempfile'
 require 'yaml'
 
 class CloudenvHQ
-  VERSION = '0.2.7'.freeze
+  VERSION = '0.2.8'.freeze
 
   API_HOST = 'https://app.cloudenv.com'.freeze
   READ_PATH = '/api/v1/envs'.freeze
@@ -15,7 +15,7 @@ class CloudenvHQ
     if ENV['CLOUDENV_BEARER_TOKEN'] || options[:bearer]
       @bearer = ENV['CLOUDENV_BEARER_TOKEN'] || options[:bearer]
     else
-      @bearer_filename = File.expand_path(ENV['CLOUDENV_BEARER_FILE'] || '~/.cloudenvrc')
+      @bearer_filename = File.expand_path(ENV['CLOUDENV_BEARER_PATH'] || '~/.cloudenvrc')
       @bearer = IO.read(@bearer_filename).to_s.strip if File.exist?(@bearer_filename)
     end
 
@@ -23,11 +23,11 @@ class CloudenvHQ
       @app = ENV['CLOUDENV_APP_SLUG']
       @secret_key = ENV['CLOUDENV_APP_SECRET_KEY']
     else
-      @secret_key_filename = File.expand_path(ENV['CLOUDENV_APP_SECRET_KEY_FILE'] || '.cloudenv-secret-key')
+      @secret_key_filename = File.expand_path(ENV['CLOUDENV_APP_SECRET_KEY_PATH'] || '.cloudenv-secret-key')
       @secret_key = Pathname.new(@secret_key_filename)
 
       until File.exist?(@secret_key) || @secret_key.expand_path == Pathname.new('/.cloudenv-secret-key')
-        @secret_key = @secret_key.parent.parent + @secret_key_filename
+        @secret_key = @secret_key.parent.parent + @secret_key_filename.split('/').last
       end
 
       if File.exist?(@secret_key)
@@ -42,7 +42,7 @@ class CloudenvHQ
       if @environment
         data = `curl -s -H "Authorization: Bearer #{@bearer}" "#{API_HOST}#{READ_PATH}?name=#{@app}&environment=#{@environment}&version=#{VERSION}&lang=ruby" | openssl enc -a -aes-256-cbc -md sha512 -d -pass pass:"#{@secret_key}" 2> /dev/null`
         file = Tempfile.new('cloudenv')
-        file.write(data)
+        file.write(data.encode('UTF-8', invalid: :replace, replace: ''))
         file.close
         Dotenv.load(file.path)
         file.unlink
@@ -50,10 +50,12 @@ class CloudenvHQ
 
       data = `curl -s -H "Authorization: Bearer #{@bearer}" "#{API_HOST}#{READ_PATH}?name=#{@app}&environment=default&version=#{VERSION}&lang=ruby" | openssl enc -a -aes-256-cbc -md sha512 -d -pass pass:"#{@secret_key}" 2> /dev/null`
       file = Tempfile.new('cloudenv')
-      file.write(data)
+      file.write(data.encode('UTF-8', invalid: :replace, replace: ''))
       file.close
+      puts 1
       Dotenv.load(file.path)
       file.unlink
+
     else
       warn 'WARNING: cloudenv could not find a .cloudenv-secret-key in the directory path or values for both ENV["CLOUDENV_APP_SLUG"] and ENV["CLOUDENV_APP_SECRET_KEY"]'
     end
