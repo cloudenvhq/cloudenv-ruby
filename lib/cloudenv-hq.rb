@@ -4,7 +4,7 @@ require 'tempfile'
 require 'yaml'
 
 class CloudenvHQ
-  VERSION = '0.2.8'.freeze
+  VERSION = '0.2.9'.freeze
 
   API_HOST = 'https://app.cloudenv.com'.freeze
   READ_PATH = '/api/v1/envs'.freeze
@@ -52,7 +52,6 @@ class CloudenvHQ
       file = Tempfile.new('cloudenv')
       file.write(data.encode('UTF-8', invalid: :replace, replace: ''))
       file.close
-      puts 1
       Dotenv.load(file.path)
       file.unlink
 
